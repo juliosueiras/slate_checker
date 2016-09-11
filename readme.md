@@ -1,6 +1,6 @@
-# slate-checker
+# slate-app
 
-> My brilliant app
+> A Unofficial Desktop app for Slate(Sheridan College's LMS)
 
 
 ## Dev
