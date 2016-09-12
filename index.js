@@ -1,15 +1,21 @@
 'use strict';
 const electron = require('electron');
-const {Menu, Tray} = require('electron')
-let db = require('diskdb');
+const {Menu, ipcMain, Tray} = require('electron')
+const axios = require('axios');
+const path = require('path')
+const _ = require('lodash');
 let tray = null
 
-const app = electron.app;
+let locals = {}
+const pug = require('electron-pug')({pretty: true}, locals)
 
+const app = electron.app;
+const apiBase = 'https://slate.sheridancollege.ca/d2l/api';
+
+
+axios.defaults.headers.common['Cookie'] = "d2lSessionVal=LymjlGNV6rkxI98XuHbKhBIH2; d2lSecureSessionVal=zhe4sHDj4oCKyyf92DNXg48TI;";
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
-
-db = db.connect('./db', ['alerts', 'emails'])
 
 // prevent window being garbage collected
 let mainWindow;
@@ -23,10 +29,11 @@ function onClosed() {
 function createMainWindow() {
 	const win = new electron.BrowserWindow({
 		width: 600,
-		height: 400
+        height: 400,
+        frame: false,
 	});
-
-	win.loadURL(`file://${__dirname}/index.html`);
+    win.loadURL(`file://${__dirname}/views/index.pug`);
+    win.toggleDevTools();
 	win.on('closed', onClosed);
 
 	return win;
@@ -46,8 +53,23 @@ app.on('activate', () => {
 
 app.on('ready', () => {
 	mainWindow = createMainWindow();
+});
 
-    var axios = require('axios');
+ipcMain.on('getCourseContent', (event, courseId) => {
+    console.log(`${apiBase}/le/1.10/${courseId}/content/toc`)
+    axios.get(`${apiBase}/le/1.10/${courseId}/content/toc`).then((res) => {
+        event.sender.send('getCourseContent-reply', res.data);
+    });
+});
+
+ipcMain.on('getCourses', (event, arg) => {
+    axios.get(`${apiBase}/lp/1.10/enrollments/myenrollments/`).then((res) => {
+        event.sender.send('getCourses-reply', _.filter(res.data.Items, ['OrgUnit.Type.Code', 'Course Offering']));
+    });
+});
+
+ipcMain.on('getAlerts', (event, arg) => {
+
     var cheerio = require('cheerio');
 
     var result;
@@ -55,31 +77,18 @@ app.on('ready', () => {
 
     axios({
         url: 'https://slate.sheridancollege.ca/d2l/MiniBar/313983/ActivityFeed/GetAlerts?Category=1&_d2l_prc%24headingLevel=2&_d2l_prc%24scope=&_d2l_prc%24hasActiveForm=false&isXhr=true&requestId=3',
-        method: 'get',
-        headers: {
-            Cookie: "d2lSessionVal=RUHuxZ2zxGpHjF7TxwsUwaJWC; d2lSecureSessionVal=cVg4mqlVB1NcEEbiMixK2mTh1;" }
+        method: 'get'
     }).then((res) => {
         result = JSON.parse(res.data.split('while(1);')[1]).Payload.Html;
-        let $ = cheerio.load(result.replace(/\t|\r|\n/g, '')); 
+        let $ = cheerio.load(result.replace(/\t|\r|\n/g, ''));
         let result_items = $('.d2l-datalist-item-content')
-        result_items.each((index,item) => { 
+        result_items.each((index,item) => {
             result_content.push({ 'title': item.attribs.title });
         });
 
-        db.alerts.save(result_content);
+        event.sender.send('getAlerts-reply', result_content)
         console.log("Finish Grabbing Alerts")
-
     });
 
-    tray = new Tray('./logo.jpg')
-    const contextMenu = Menu.buildFromTemplate([
-        {label: 'Item1', type: 'radio'},
-        {label: 'Item2', type: 'radio'},
-        {label: 'Item3', type: 'radio', checked: true},
-        {label: 'Item4', type: 'radio'}
-    ])
-    tray.setToolTip('This is my application.')
-    tray.setContextMenu(contextMenu)
-    tray.displayBalloon({ title: "Fucker" , content: "Fuck off"});
 
-});
+})

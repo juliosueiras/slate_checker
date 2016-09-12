@@ -1,0 +1,27 @@
+{
+  "name": "slate-checker",
+  "description": "slate checker",
+  "main": "index.js",
+  "authors": [
+    "Julio Tain Sueiras<juliosueiras@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "electron-app",
+    "electron"
+  ],
+  "homepage": "https://github.com/juliosueiras/slate_checker",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "semantic": "semantic-ui#^2.2.4",
+    "jquery": "^3.1.0"
+  }
+}

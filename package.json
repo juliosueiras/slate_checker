@@ -11,9 +11,19 @@
     "url": "juliosueiras.github.io"
   },
   "scripts": {
+    "postinstall": "install-app-deps",
+    "pack": "build --dir",
+    "dist": "build",
     "test": "xo",
     "start": "electron .",
     "build": "electron-packager . --out=dist --asar --overwrite --all"
+  },
+  "build": {
+    "appId": "slate.checker",
+    "app-category-type": "slate",
+    "win": {
+      "iconUrl": "https://www.sheridancollege.ca/SheridanCollege/img/sheridan-logo.svg"
+    }
   },
   "files": [
     "index.js",
@@ -26,8 +36,10 @@
   ],
   "dependencies": {
     "axios": "^0.14.0",
+    "cheerio": "^0.22.0",
     "diskdb": "^0.1.15",
-    "electron-debug": "^1.0.0"
+    "electron-debug": "^1.0.0",
+    "electron-pug": "^1.5.1"
   },
   "devDependencies": {
     "devtron": "^1.1.0",
