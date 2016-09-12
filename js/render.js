@@ -20,6 +20,7 @@ ipcRenderer.on('getCourses-reply', (event, arg) => {
 });
 
 ipcRenderer.on('getAlerts-reply', (event, arg) => {
+    $('#alert-list').html('');
     arg.forEach((item, index) => {
         let alert = item.title.split(', ');
         console.log(alert);
