@@ -17,6 +17,13 @@ html
             .right.menu
                 a#alert-button.ui.item Alerts
         // #course-content.ui.vertical.top.menu
+        label Username:
+        input#username.ui.input
+
+        label Password:
+        input(type='password')#password.ui.input
+
+        button#login.ui.submit Login
     script if (typeof module === 'object') {window.module = module; module = undefined;}
     script(src='../lib/jquery/dist/jquery.min.js')
     script(src='../lib/semantic/dist/semantic.min.js')

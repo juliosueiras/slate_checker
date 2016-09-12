@@ -39,7 +39,8 @@
     "cheerio": "^0.22.0",
     "diskdb": "^0.1.15",
     "electron-debug": "^1.0.0",
-    "electron-pug": "^1.5.1"
+    "electron-pug": "^1.5.1",
+    "nightmare": "^2.7.0"
   },
   "devDependencies": {
     "devtron": "^1.1.0",

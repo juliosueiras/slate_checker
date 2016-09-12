@@ -13,6 +13,12 @@ ipcRenderer.on('getCourseContent-reply', (event, courseToc) => {
 
 });
 
+ipcRenderer.on('login-reply', (event, arg) => {
+    if(arg == 'success') {
+        console.log('successfully logged in');
+    }
+});
+
 ipcRenderer.on('getCourses-reply', (event, arg) => {
     arg.forEach((item, index) => { $('#courses').append(` <a id="${item.OrgUnit.Id}" class="course item ${(index == 0)? 'active' : ''}">${item.OrgUnit.Name.split(' ').reduce((p, n , index) => { return (index == 1)? n + '' : p + ' ' + n; })}</a>
         `);
@@ -40,11 +46,14 @@ ipcRenderer.on('getAlerts-reply', (event, arg) => {
     })
 })
 
-ipcRenderer.send('getCourses')
 
 $(document).ready(() =>{
     $('#courses').on('click', (event) => {
         ipcRenderer.send('getCourseContent', event.target.id);
+    });
+
+    $('#login').on('click', (event) => {
+        ipcRenderer.send('login', $("#username").val(), $("#password").val());
     });
 
     renderCourseButton();
@@ -54,7 +63,9 @@ $(document).ready(() =>{
 
 const renderCourseButton = () => {
     $('#course-button').on('click', (event) => {
-        $('#courses').sidebar('setting', 'transition', 'scale down').sidebar('toggle')
+        $('#courses').html('');
+        $('#courses').sidebar('setting', 'transition', 'scale down').sidebar('toggle');
+        ipcRenderer.send('getCourses');
     })
 }
 

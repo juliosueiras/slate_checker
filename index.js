@@ -12,8 +12,16 @@ const pug = require('electron-pug')({pretty: true}, locals)
 const app = electron.app;
 const apiBase = 'https://slate.sheridancollege.ca/d2l/api';
 
+let user = { 
+    username: process.env['SLATE_USERNAME'],
+    password: process.env['SLATE_PASSWORD']
+}
 
-axios.defaults.headers.common['Cookie'] = "d2lSessionVal=LymjlGNV6rkxI98XuHbKhBIH2; d2lSecureSessionVal=zhe4sHDj4oCKyyf92DNXg48TI;";
+var Nightmare = require('nightmare');
+var nightmare = Nightmare({ show: true })
+
+
+
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
@@ -33,7 +41,6 @@ function createMainWindow() {
         frame: false,
 	});
     win.loadURL(`file://${__dirname}/views/index.pug`);
-    win.toggleDevTools();
 	win.on('closed', onClosed);
 
 	return win;
@@ -47,12 +54,34 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
 	if (!mainWindow) {
-		mainWindow = createMainWindow();
+        mainWindow = createMainWindow();
 	}
 });
 
 app.on('ready', () => {
-	mainWindow = createMainWindow();
+                mainWindow = createMainWindow();
+
+
+});
+ipcMain.on('login', (event, username, password) => {
+        nightmare
+            .viewport(0,0)
+            .goto('https://slate.sheridancollege.ca/')
+            .type('form [name=j_username]', username)
+            .type('form [name=j_password]', password)
+            .click('form [type=submit]')
+            .wait(5000)
+            .end()
+            .cookies.get()
+            .then(function (cookie) {
+                axios.defaults.headers.common['Cookie'] = `d2lSessionVal=${cookie[3].value}; d2lSecureSessionVal=${cookie[4].value};`;
+                console.log("Finish grabbing cookies")
+                console.log(axios.defaults.headers.common['Cookie']);
+                event.sender.send('login-reply', 'success');
+            })
+            .catch(function (error) {
+                console.error('Faild to get Cookie');
+            });
 });
 
 ipcMain.on('getCourseContent', (event, courseId) => {
