@@ -17,15 +17,37 @@ html
             .right.menu
                 a#alert-button.ui.item Alerts
         // #course-content.ui.vertical.top.menu
-        label Username:
-        input#username.ui.input
+        .column
+          .ui.form
+            .field
+              label Username
+              .ui.left.icon.input
+                input#username(type='text', placeholder='Username', style='background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=");', autocomplete='off')
+                i.user.icon
+            .field
+              label Password
+              .ui.left.icon.input
+                input#password(type='password', style='background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP6zwAAAgcBApocMXEAAAAASUVORK5CYII=");', autocomplete='off')
+                i.lock.icon
+            #login.ui.blue.submit.button Login
 
-        label Password:
-        input(type='password')#password.ui.input
+        .ui.divider
 
-        button#login.ui.submit Login
+        #classlist.ui.teal.labeled.icon.button Classlist
+            i.add.icon
+
+        #classlist-content.ui.middle.aligned.divided.list
+
+        canvas#canvas
+
+
+        // .ui.segment
+        //     .ui.active.dimmer
+        //         .ui.indeterminate.text.loader Logging in...
+
     script if (typeof module === 'object') {window.module = module; module = undefined;}
     script(src='../lib/jquery/dist/jquery.min.js')
     script(src='../lib/semantic/dist/semantic.min.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.5.456/pdf.js')
     script(src='../js/render.js')
     script if (window.module) module = window.module;

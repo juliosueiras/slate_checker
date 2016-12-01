@@ -13,6 +13,20 @@ ipcRenderer.on('getCourseContent-reply', (event, courseToc) => {
 
 });
 
+ipcRenderer.on('getClasslist-reply', (event, classlist) => {
+    $('#classlist-content').html('');
+    classlist.forEach((student, index) => {
+        $('#classlist-content').append(`
+        <div class="item">
+            <div class="content">
+                <a class="header">${student.DisplayName}</a>
+            </div>
+        </div>
+        `);
+    })
+
+});
+
 ipcRenderer.on('login-reply', (event, arg) => {
     if(arg == 'success') {
         console.log('successfully logged in');
@@ -66,6 +80,10 @@ const renderCourseButton = () => {
         $('#courses').html('');
         $('#courses').sidebar('setting', 'transition', 'scale down').sidebar('toggle');
         ipcRenderer.send('getCourses');
+    })
+
+    $('#classlist').on('click', (event) => {
+        ipcRenderer.send('getClasslist');
     })
 }
 
