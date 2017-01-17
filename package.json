@@ -35,7 +35,7 @@
     "electron"
   ],
   "dependencies": {
-    "axios": "^0.14.0",
+    "axios": "^0.15.3",
     "cheerio": "^0.22.0",
     "diskdb": "^0.1.15",
     "electron-debug": "^1.0.0",
@@ -46,7 +46,7 @@
     "devtron": "^1.1.0",
     "electron-packager": "^8.0.0",
     "electron": "^1.3.3",
-    "xo": "^0.16.0"
+    "xo": "^0.17.1"
   },
   "xo": {
     "esnext": true,
