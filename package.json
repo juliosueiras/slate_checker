@@ -16,7 +16,9 @@
     "dist": "build",
     "test": "xo",
     "start": "electron .",
-    "build": "electron-packager . --out=dist --asar --overwrite --all"
+    "build": "electron-packager . --out=dist --asar --overwrite --all",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "build": {
     "appId": "slate.checker",
@@ -40,7 +42,8 @@
     "diskdb": "^0.1.15",
     "electron-debug": "^1.0.0",
     "electron-pug": "^1.5.1",
-    "nightmare": "^2.7.0"
+    "nightmare": "^2.7.0",
+    "snyk": "^1.316.2"
   },
   "devDependencies": {
     "devtron": "^1.1.0",
@@ -54,5 +57,6 @@
       "node",
       "browser"
     ]
-  }
+  },
+  "snyk": true
 }
