@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "axios": "^0.14.0",
-    "cheerio": "^0.22.0",
+    "cheerio": "^1.0.0",
     "diskdb": "^0.1.15",
     "electron-debug": "^1.0.0",
     "electron-pug": "^1.5.1",
